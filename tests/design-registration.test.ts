@@ -1,16 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-// Mock implementation for testing Clarity contracts
-const mockBlockchain = {
-  currentHeight: 10,
-  currentTime: 1617984000,
-  contracts: {},
-  principals: {
-    'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM': { balance: 1000000 },
-    'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG': { balance: 1000000 }
-  }
-};
-
 // Mock contract implementation
 const designRegistrationContract = {
   lastDesignId: 0,
@@ -31,7 +20,7 @@ const designRegistrationContract = {
       name,
       description,
       imageUri,
-      createdAt: mockBlockchain.currentTime,
+      createdAt: 10, // Mock block height
       status: 'active'
     };
     this.lastDesignId = newDesignId;
@@ -44,7 +33,7 @@ const designRegistrationContract = {
       return { success: false, error: 1 };
     }
     if (design.owner !== sender) {
-      return { success: false, error: 2 };
+      return { success: false, error: 3 };
     }
     this.designs[designId].status = newStatus;
     return { success: true, value: true };
@@ -115,7 +104,7 @@ describe('Design Registration Contract', () => {
     );
     
     expect(result.success).toBe(false);
-    expect(result.error).toBe(2);
+    expect(result.error).toBe(3);
     expect(designRegistrationContract.getDesign(1).status).toBe('active');
   });
 });
